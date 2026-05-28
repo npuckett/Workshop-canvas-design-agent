@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>01 Setup -- Canvas Design Agent</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      color: #333;
+      line-height: 1.6;
+      background: #fff;
+    }
+    a { color: #222; text-decoration: none; }
+    a:hover { color: #000; }
+
+    nav {
+      background: #000;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav .brand { font-weight: 700; font-size: 18px; color: #fff; }
+    nav .links { display: flex; flex-wrap: wrap; gap: 14px; }
+    nav .links a { color: #999; font-size: 15px; text-decoration: none; }
+    nav .links a:hover { color: #fff; }
+
+    .page { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      background: #f8f8f8;
+      border-right: 1px solid #dee2e6;
+      padding: 24px 16px;
+      position: sticky;
+      top: 56px;
+      height: calc(100vh - 56px);
+      overflow-y: auto;
+    }
+    .sidebar h4 {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #6c757d;
+      margin: 16px 0 8px;
+    }
+    .sidebar h4:first-child { margin-top: 0; }
+    .sidebar a {
+      display: block;
+      font-size: 13px;
+      color: #495057;
+      padding: 3px 0;
+      line-height: 1.4;
+    }
+    .sidebar a:hover { color: #000; text-decoration: none; }
+    .sidebar .id { font-family: monospace; font-weight: 600; display: inline-block; width: 32px; }
+
+    .main { flex: 1; padding: 32px 40px; max-width: 900px; }
+    .orientation {
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      background: #fafafa;
+      padding: 18px;
+      margin-bottom: 32px;
+      color: #495057;
+      font-size: 14px;
+    }
+    .orientation p { margin-bottom: 10px; color: #495057; }
+    .orientation p:last-child { margin-bottom: 0; }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #000;
+      margin: 0 0 8px;
+    }
+    h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #000;
+      margin: 48px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    h2:first-child { margin-top: 0; }
+    h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #333;
+      margin: 0 0 8px;
+    }
+    p { color: #495057; margin-bottom: 12px; }
+    ul { padding-left: 22px; color: #495057; margin: 8px 0 0; }
+    li { margin-bottom: 6px; }
+    code {
+      font-family: 'Courier New', Courier, monospace;
+      background: #f8f8f8;
+      border: 1px solid #dee2e6;
+      border-radius: 3px;
+      padding: 2px 5px;
+      font-size: 13px;
+      color: #333;
+    }
+    .step {
+      margin-bottom: 24px;
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .step-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: #f8f8f8;
+      border-bottom: 1px solid #dee2e6;
+    }
+    .step-head h2,
+    .step-head h3 {
+      margin: 0;
+      padding: 0;
+      border: none;
+    }
+    .step-id {
+      background: #000;
+      color: #fff;
+      font-family: monospace;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 3px 8px;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+    .step-body { padding: 16px; }
+    .note {
+      border-left: 3px solid #000;
+      background: #fafafa;
+      padding: 14px 18px;
+      margin: 24px 0;
+      border-radius: 0 4px 4px 0;
+      font-size: 14px;
+      color: #495057;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main { padding: 24px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="brand">Canvas Design Agent</span>
+  <span class="links">
+    <a href="setup.html">01 Setup</a>
+    <a href="index.html">Elements</a>
+  </span>
+</nav>
+
+<div class="page">
+
+<aside class="sidebar">
+  <h4>Setup</h4>
+  <a href="#text-editor"><span class="id">01</span> Text Editor</a>
+  <a href="#example-files"><span class="id">02</span> Example Files</a>
+  <a href="#open-folder"><span class="id">03</span> Open Folder</a>
+  <a href="#web-tools"><span class="id">04</span> Web Tools</a>
+
+  <h4>Optional</h4>
+  <a href="#copilot"><span class="id">05</span> Copilot</a>
+  <a href="#claude-code"><span class="id">06</span> Claude Code</a>
+</aside>
+
+<main class="main">
+  <div class="orientation">
+    <h1>01 Setup</h1>
+    <p>Use this page to get the workshop files open and ready. If you are using a web-based chat tool, the first three steps are enough.</p>
+  </div>
+
+  <section class="step" id="text-editor">
+    <div class="step-head"><span class="step-id">01</span><h2>Get a text editor</h2></div>
+    <div class="step-body">
+      <p>It is possible to use any text editor, but for this workshop it will be easiest if everyone is using VS Code.</p>
+      <p><a href="https://code.visualstudio.com/download">Download VS Code</a></p>
+      <ul>
+        <li>Download it</li>
+        <li>Install it</li>
+        <li>Open it</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step" id="example-files">
+    <div class="step-head"><span class="step-id">02</span><h2>Download the example files</h2></div>
+    <div class="step-body">
+      <p>Download the zip file that contains the skill file and the examples we will use. The workshop link will be added here.</p>
+      <ul>
+        <li>Unzip the folder somewhere on your computer</li>
+        <li>If you are familiar with GitHub, you can also clone the repo from <a href="https://github.com/npuckett/Workshop-canvas-design-agent">Workshop-canvas-design-agent</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step" id="open-folder">
+    <div class="step-head"><span class="step-id">03</span><h2>Open the example folder in VS Code</h2></div>
+    <div class="step-body">
+      <ul>
+        <li>Open VS Code</li>
+        <li>Go to File -> Open Folder</li>
+        <li>Select the folder wherever you unzipped it</li>
+        <li>Choose the File icon on the top left and you should now see the examples</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step" id="web-tools">
+    <div class="step-head"><span class="step-id">04</span><h2>Web-based tools</h2></div>
+    <div class="step-body">
+      <p>If you are working with web-based tools such as Microsoft Copilot, ChatGPT, or Claude, you are ready to go once the example files are open.</p>
+    </div>
+  </section>
+
+  <h2>Optional Local Tool Setup</h2>
+
+  <section class="step" id="copilot">
+    <div class="step-head"><span class="step-id">05</span><h3>GitHub Copilot in VS Code</h3></div>
+    <div class="step-body">
+      <p>Use these steps if you have already cloned the repo locally.</p>
+      <ul>
+        <li>Open VS Code</li>
+        <li>Go to File -> Open Folder</li>
+        <li>Select the cloned <code>Workshop-canvas-design-agent</code> folder</li>
+        <li>Make sure the GitHub Copilot extension is installed and you are signed in</li>
+        <li>Open Copilot Chat in VS Code</li>
+        <li>Ask Copilot to use the files in this repo to help generate Canvas-ready HTML</li>
+        <li>The repo includes <code>.github/copilot-instructions.md</code>, so Copilot should automatically use the Canvas Design Agent instructions while you work in this folder</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step" id="claude-code">
+    <div class="step-head"><span class="step-id">06</span><h3>Claude Code</h3></div>
+    <div class="step-body">
+      <p>Use these steps if you have already cloned the repo locally.</p>
+      <ul>
+        <li>Open Terminal</li>
+        <li>Move into the cloned repo folder: <code>cd path/to/Workshop-canvas-design-agent</code></li>
+        <li>Start Claude Code from that folder</li>
+        <li>Tell Claude to use <code>SKILL.md</code> as the Canvas Design Agent instruction file</li>
+        <li>Open or reference one of the prompt files in <code>02_simple_prompts</code> or <code>03_homepage_schedule</code></li>
+        <li>Ask Claude to create Canvas-ready HTML from the prompt</li>
+        <li>If Claude can create files, ask it to save the output as <code>canvas-fragment.html</code>; otherwise, ask it to show the Canvas HTML source in chat</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="note">
+    <p>After setup, start with the simple prompt files, then use the Elements catalog when you want to change a layout, callout, table, media block, or theme.</p>
+  </div>
+</main>
+</div>
+
+<footer style="border-top: 1px solid #e0e0e0; padding: 24px; text-align: center; font-size: 13px; color: #999;">
+  Canvas Design Agent -- Workshop Setup
+</footer>
+
+</body>
+</html>
