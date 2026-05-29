@@ -35,6 +35,7 @@ Over the past year, I managed to package up the workflows I have been using into
 - Getting Set up with some of the tools
 - Learning the basic design process of working with textFiles -> html -> Canvas pages
 - Experimenting with the tools based on a ficticious course I generated
+- Using the workshop Canvas course: https://canvascloud.ocadu.ca/courses/14047
 
 # Caveats
 - This tool is very much still in development. 
