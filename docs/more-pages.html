@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>04 More Pages -- Canvas Design Agent</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      color: #333;
+      line-height: 1.6;
+      background: #fff;
+    }
+    a {
+      color: #000;
+      font-weight: 700;
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+    a:hover { color: #333; background: #f0f0f0; }
+
+    nav {
+      background: #000;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav .brand { font-weight: 700; font-size: 18px; color: #fff; }
+    nav .links { display: flex; flex-wrap: wrap; gap: 14px; }
+    nav .links a {
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+    nav .links a:hover { color: #fff; background: #333; }
+
+    .page { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      background: #f8f8f8;
+      border-right: 1px solid #dee2e6;
+      padding: 24px 16px;
+      position: sticky;
+      top: 56px;
+      height: calc(100vh - 56px);
+      overflow-y: auto;
+    }
+    .sidebar h4 {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #6c757d;
+      margin: 16px 0 8px;
+    }
+    .sidebar h4:first-child { margin-top: 0; }
+    .sidebar a {
+      display: block;
+      font-size: 13px;
+      color: #495057;
+      font-weight: 700;
+      padding: 3px 0;
+      line-height: 1.4;
+      text-decoration: none;
+    }
+    .sidebar a:hover { color: #000; background: #eeeeee; text-decoration: underline; }
+    .sidebar .id { font-family: monospace; font-weight: 600; display: inline-block; width: 32px; }
+
+    .main { flex: 1; padding: 32px 40px; max-width: 1040px; }
+    .orientation {
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      background: #fafafa;
+      padding: 18px;
+      margin-bottom: 32px;
+      color: #495057;
+      font-size: 14px;
+    }
+    .orientation p { margin-bottom: 10px; color: #495057; }
+    .orientation p:last-child { margin-bottom: 0; }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #000;
+      margin: 0 0 8px;
+    }
+    h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #000;
+      margin: 48px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    h2:first-child { margin-top: 0; }
+    h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #333;
+      margin: 0 0 8px;
+    }
+    h4 {
+      font-size: 15px;
+      font-weight: 800;
+      color: #000;
+      margin: 18px 0 8px;
+    }
+    p { color: #495057; margin-bottom: 12px; }
+    ul, ol { padding-left: 22px; color: #495057; margin: 8px 0 0; }
+    li { margin-bottom: 6px; }
+    code {
+      font-family: 'Courier New', Courier, monospace;
+      background: #f8f8f8;
+      border: 1px solid #dee2e6;
+      border-radius: 3px;
+      padding: 2px 5px;
+      font-size: 13px;
+      color: #333;
+    }
+    .step {
+      margin-bottom: 24px;
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .step-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: #f8f8f8;
+      border-bottom: 1px solid #dee2e6;
+    }
+    .step-head h2,
+    .step-head h3 {
+      margin: 0;
+      padding: 0;
+      border: none;
+    }
+    .step-id {
+      background: #000;
+      color: #fff;
+      font-family: monospace;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 3px 8px;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+    .step-body { padding: 16px; }
+    .note {
+      border-left: 3px solid #000;
+      background: #fafafa;
+      padding: 14px 18px;
+      margin: 18px 0;
+      border-radius: 0 4px 4px 0;
+      font-size: 14px;
+      color: #495057;
+    }
+    .prompt-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .mini-card {
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      background: #fafafa;
+      padding: 14px;
+    }
+    .mini-card code { display: inline-block; margin-bottom: 8px; }
+    .answer-card {
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      background: #fff;
+    }
+    .answer-head {
+      background: #f8f8f8;
+      border-bottom: 1px solid #dee2e6;
+      padding: 12px 16px;
+    }
+    .answer-head p { margin: 0; font-size: 13px; color: #6c757d; }
+    .answer-preview {
+      background: #ffffff;
+      padding: 0;
+    }
+    .answer-preview iframe {
+      display: block;
+      width: 100%;
+      height: 560px;
+      border: 0;
+      background: #ffffff;
+    }
+    .answer-preview iframe.tall { height: 720px; }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main { padding: 24px 16px; }
+      .answer-preview iframe,
+      .answer-preview iframe.tall { height: 620px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="brand">Canvas Design Agent Workshop Pt 1</span>
+  <span class="links">
+    <a href="introduction.html">Introduction</a>
+    <a href="setup.html">01 Setup</a>
+    <a href="basic-workflow.html">02 Basic Workflow</a>
+    <a href="first-pages.html">03 First Pages</a>
+    <a href="more-pages.html">04 More Pages</a>
+    <a href="index.html">Elements</a>
+  </span>
+</nav>
+
+<div class="page">
+
+<aside class="sidebar">
+  <h4>Guide</h4>
+  <a href="#start"><span class="id">01</span> Start</a>
+  <a href="#prompts"><span class="id">02</span> Prompt Files</a>
+
+  <h4>Pages</h4>
+  <a href="#assignment-page"><span class="id">03</span> Assignment</a>
+  <a href="#class-page"><span class="id">04</span> Class Page</a>
+  <a href="#course-timeline"><span class="id">05</span> Timeline</a>
+  <a href="#gallery-page"><span class="id">06</span> Gallery</a>
+  <a href="#homepage"><span class="id">07</span> Homepage</a>
+  <a href="#project-brief"><span class="id">08</span> Project Brief</a>
+  <a href="#simple-syllabus"><span class="id">09</span> Syllabus</a>
+
+  <h4>Outcome</h4>
+  <a href="#the-answers"><span class="id">10</span> The Answers</a>
+</aside>
+
+<main class="main">
+  <div class="orientation" id="start">
+    <h1>04 More Pages</h1>
+    <p>This page moves from the three starter prompts into the larger set in <code>02_simple_prompts</code>. Each file is still copy/paste friendly, but the pages are a little more realistic: assignments, timelines, galleries, homepages, project briefs, and syllabi.</p>
+    <p>Use these as recipes. Change one tag or one content section at a time, generate again, and compare the result.</p>
+  </div>
+
+  <section class="step" id="prompts">
+    <div class="step-head"><span class="step-id">01</span><h2>What These Prompts Are For</h2></div>
+    <div class="step-body">
+      <p>The files in <code>02_simple_prompts</code> use the same pattern you saw earlier: output instructions at the top, global style tags, section-level element tags, comments with alternatives, and course content below.</p>
+      <div class="prompt-grid">
+        <div class="mini-card"><code>assignment-page.md</code><p>A student-facing assignment brief with requirements, submission details, and a rubric.</p></div>
+        <div class="mini-card"><code>class-page.md</code><p>A compact class session page for one meeting, including reminders and before-next-class work.</p></div>
+        <div class="mini-card"><code>course-timeline.md</code><p>A semester schedule organized by units, key dates, progress, and grading.</p></div>
+        <div class="mini-card"><code>gallery-page.md</code><p>A visual research prompt page with image treatment, gallery cards, and resources.</p></div>
+        <div class="mini-card"><code>homepage.md</code><p>A course landing page with a welcome message, this-week block, links, dates, and deliverables.</p></div>
+        <div class="mini-card"><code>project-brief.md</code><p>A larger project page with milestones, deliverables, testing norms, and submission links.</p></div>
+        <div class="mini-card"><code>simple-syllabus.md</code><p>A condensed syllabus page with course info, schedule, grading, and workshop norms.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" id="assignment-page">
+    <div class="step-head"><span class="step-id">02</span><h2>Assignment Page</h2></div>
+    <div class="step-body">
+      <p><code>02_simple_prompts/assignment-page.md</code> creates a Canvas assignment page for Workshop 2. It is useful when students need a clean brief with purpose, requirements, research focus, submission instructions, and an evaluation rubric.</p>
+      <h4>Ways to change it</h4>
+      <ul>
+        <li>Change the global style from <code>S06 Editorial</code> to <code>S01 Clean Modern</code> or <code>S02 Bold Academic</code>.</li>
+        <li>Try a different rubric display, such as <code>D04 Captioned Table</code> or separate <code>C03 Info Card</code> sections.</li>
+        <li>Change the requirements from <code>C07 Checklist</code> to a standard unordered list if the checklist feels too task-like.</li>
+        <li>Keep the due date, weight, and submission details visible; those should not be hidden in a collapsible.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step" id="class-page">
+    <div class="step-head"><span class="step-id">03</span><h2>Class Page</h2></div>
+    <div class="step-body">
+      <p><code>02_simple_prompts/class-page.md</code> builds a minimal page for one class meeting. It is a good everyday template for agenda, reminder, reading, checklist, and resource links.</p>
+      <h4>Ways to change it</h4>
+      <ul>
+        <li>Switch the page style to <code>S03 Warm Minimal</code>, <code>S07 Studio Light</code>, or <code>S04 High Contrast</code>.</li>
+        <li>Change the reminder from an alert box to a left-border accent if the page feels too urgent.</li>
+        <li>Try the agenda as a checklist, schedule grid, or info card to compare pacing.</li>
+        <li>Use button links only for links students need to click quickly.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step" id="course-timeline">
+    <div class="step-head"><span class="step-id">04</span><h2>Course Timeline</h2></div>
+    <div class="step-body">
+      <p><code>02_simple_prompts/course-timeline.md</code> turns semester data into a readable schedule page. It includes custom colors, key dates, unit sections, schedule grids, a table of contents, and grading bars.</p>
+      <h4>Ways to change it</h4>
+      <ul>
+        <li>Change <code>D05 Schedule Grid</code> to <code>D01 Data Table</code> for a more compact schedule.</li>
+        <li>Try <code>C01 Collapsible Section</code> if each unit has a lot of detail, but keep major deadlines visible.</li>
+        <li>Change the primary and accent colors to match a department or course palette.</li>
+        <li>Remove the progress bar once the course is not being taught week by week.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step" id="gallery-page">
+    <div class="step-head"><span class="step-id">05</span><h2>Gallery Page</h2></div>
+    <div class="step-body">
+      <p><code>02_simple_prompts/gallery-page.md</code> creates a visual research page. It uses a strong theme, a linked banner image, gallery prompt cards, a deadline reminder, and resource links.</p>
+      <h4>Ways to change it</h4>
+      <ul>
+        <li>Compare <code>S05 Studio Dark</code> with <code>S07 Studio Light</code> using the same content.</li>
+        <li>Swap the banner from <code>E03 Linked Image</code> to <code>E01 GitHub-Hosted Image</code> if it should not link out.</li>
+        <li>Change gallery prompt cards into a table if students need to compare examples side by side.</li>
+        <li>Keep all image URLs absolute so the page works inside Canvas.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step" id="homepage">
+    <div class="step-head"><span class="step-id">06</span><h2>Course Homepage</h2></div>
+    <div class="step-body">
+      <p><code>02_simple_prompts/homepage.md</code> creates a practical Canvas homepage. It introduces the course, shows an image, highlights the current week, provides quick links, and lists units, dates, projects, and deliverables.</p>
+      <h4>Ways to change it</h4>
+      <ul>
+        <li>Try <code>S01 Clean Modern</code> or <code>S06 Editorial</code> if the warm theme feels too soft for the course.</li>
+        <li>Move this week's work higher or lower by changing the section order in the Markdown.</li>
+        <li>Change the key dates from a schedule grid to info cards if there are only a few deadlines.</li>
+        <li>Use a real Canvas image URL or approved external image URL before pasting into Canvas.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step" id="project-brief">
+    <div class="step-head"><span class="step-id">07</span><h2>Project Brief</h2></div>
+    <div class="step-body">
+      <p><code>02_simple_prompts/project-brief.md</code> creates a full project page for the main phone interaction project. It includes a sidebar-style quick facts area, project description, objectives, milestones, deliverables, testing norms, rubric notes, and submission links.</p>
+      <h4>Ways to change it</h4>
+      <ul>
+        <li>Switch the layout from <code>L04 CSS Grid</code> to <code>L05 Centered Container</code> if the page needs to be simpler.</li>
+        <li>Use <code>D05 Schedule Grid</code> instead of <code>D01 Data Table</code> for milestones that map to class weeks.</li>
+        <li>Keep milestone weights and submission instructions visible near the top or bottom.</li>
+        <li>Use collapsibles for supplemental technical notes, not for essential deadlines.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step" id="simple-syllabus">
+    <div class="step-head"><span class="step-id">08</span><h2>Simple Syllabus</h2></div>
+    <div class="step-body">
+      <p><code>02_simple_prompts/simple-syllabus.md</code> generates a readable one-page syllabus overview. It is intentionally condensed: course info, course description, learning goals, schedule, grading, dates, and norms.</p>
+      <h4>Ways to change it</h4>
+      <ul>
+        <li>Try <code>S04 High Contrast</code> for maximum readability or <code>S06 Editorial</code> for a plainer typographic syllabus.</li>
+        <li>Change the schedule density tag if the table feels too compressed.</li>
+        <li>Use collapsibles only for long supplemental policies, not important course norms.</li>
+        <li>Keep grading and major deadlines visible without requiring extra clicks.</li>
+      </ul>
+    </div>
+  </section>
+
+  <h2 id="the-answers">The Answers</h2>
+  <p>These previews use copied HTML fragments from <code>02_simple_prompts/theAnswers</code>. The copies live in <code>docs/theAnswers/02_simple_prompts</code> so this page still works when the static site deploys from the <code>docs</code> folder.</p>
+
+  <article class="answer-card">
+    <div class="answer-head">
+      <h3>Assignment Page</h3>
+      <p><code>docs/theAnswers/02_simple_prompts/assignment-page/s06-editorial.html</code></p>
+    </div>
+    <div class="answer-preview"><iframe src="theAnswers/02_simple_prompts/assignment-page/s06-editorial.html" title="Rendered assignment page answer"></iframe></div>
+  </article>
+
+  <article class="answer-card">
+    <div class="answer-head">
+      <h3>Class Page</h3>
+      <p><code>docs/theAnswers/02_simple_prompts/class-page/s01-clean-modern.html</code></p>
+    </div>
+    <div class="answer-preview"><iframe src="theAnswers/02_simple_prompts/class-page/s01-clean-modern.html" title="Rendered class page answer"></iframe></div>
+  </article>
+
+  <article class="answer-card">
+    <div class="answer-head">
+      <h3>Course Timeline</h3>
+      <p><code>docs/theAnswers/02_simple_prompts/course-timeline/s01-clean-modern.html</code></p>
+    </div>
+    <div class="answer-preview"><iframe class="tall" src="theAnswers/02_simple_prompts/course-timeline/s01-clean-modern.html" title="Rendered course timeline answer"></iframe></div>
+  </article>
+
+  <article class="answer-card">
+    <div class="answer-head">
+      <h3>Gallery Page</h3>
+      <p><code>docs/theAnswers/02_simple_prompts/gallery-page/s05-studio-dark.html</code></p>
+    </div>
+    <div class="answer-preview"><iframe src="theAnswers/02_simple_prompts/gallery-page/s05-studio-dark.html" title="Rendered gallery page answer"></iframe></div>
+  </article>
+
+  <article class="answer-card">
+    <div class="answer-head">
+      <h3>Course Homepage</h3>
+      <p><code>docs/theAnswers/02_simple_prompts/homepage/s03-warm-minimal.html</code></p>
+    </div>
+    <div class="answer-preview"><iframe class="tall" src="theAnswers/02_simple_prompts/homepage/s03-warm-minimal.html" title="Rendered homepage answer"></iframe></div>
+  </article>
+
+  <article class="answer-card">
+    <div class="answer-head">
+      <h3>Project Brief</h3>
+      <p><code>docs/theAnswers/02_simple_prompts/project-brief/s02-bold-academic.html</code></p>
+    </div>
+    <div class="answer-preview"><iframe class="tall" src="theAnswers/02_simple_prompts/project-brief/s02-bold-academic.html" title="Rendered project brief answer"></iframe></div>
+  </article>
+
+  <article class="answer-card">
+    <div class="answer-head">
+      <h3>Simple Syllabus</h3>
+      <p><code>docs/theAnswers/02_simple_prompts/simple-syllabus/s02-bold-academic.html</code></p>
+    </div>
+    <div class="answer-preview"><iframe class="tall" src="theAnswers/02_simple_prompts/simple-syllabus/s02-bold-academic.html" title="Rendered simple syllabus answer"></iframe></div>
+  </article>
+</main>
+</div>
+
+<footer style="border-top: 1px solid #e0e0e0; padding: 24px; text-align: center; font-size: 13px; color: #999;">
+  Canvas Design Agent -- More Pages
+</footer>
+
+</body>
+</html>

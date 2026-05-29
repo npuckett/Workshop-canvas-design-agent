@@ -30,8 +30,15 @@
     }
     nav .brand { font-weight: 700; font-size: 18px; color: #fff; text-decoration: none; }
     nav .links { display: flex; flex-wrap: wrap; gap: 14px; }
-    nav .links a { color: #999; font-size: 15px; text-decoration: none; }
-    nav .links a:hover { color: #fff; }
+    nav .links a {
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+    nav .links a:hover { color: #fff; background: #333; }
 
     /* LAYOUT */
     .header {
@@ -84,11 +91,13 @@
 <body>
 
 <nav>
-  <span class="brand">Canvas Design Agent</span>
+  <span class="brand">Canvas Design Agent Workshop Pt 1</span>
   <span class="links">
+    <a href="introduction.html">Introduction</a>
     <a href="setup.html">01 Setup</a>
     <a href="basic-workflow.html">02 Basic Workflow</a>
     <a href="first-pages.html">03 First Pages</a>
+    <a href="more-pages.html">04 More Pages</a>
     <a href="index.html">Elements</a>
   </span>
 </nav>

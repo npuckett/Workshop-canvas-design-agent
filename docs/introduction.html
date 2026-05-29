@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Introduction -- Canvas Design Agent</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      color: #333;
+      line-height: 1.6;
+      background: #fff;
+    }
+    a {
+      color: #000;
+      font-weight: 700;
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+    a:hover { color: #333; background: #f0f0f0; }
+
+    nav {
+      background: #000;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav .brand { font-weight: 700; font-size: 18px; color: #fff; }
+    nav .links { display: flex; flex-wrap: wrap; gap: 14px; }
+    nav .links a {
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+    nav .links a:hover { color: #fff; background: #333; }
+
+    .page { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      background: #f8f8f8;
+      border-right: 1px solid #dee2e6;
+      padding: 24px 16px;
+      position: sticky;
+      top: 56px;
+      height: calc(100vh - 56px);
+      overflow-y: auto;
+    }
+    .sidebar h4 {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #6c757d;
+      margin: 16px 0 8px;
+    }
+    .sidebar h4:first-child { margin-top: 0; }
+    .sidebar a {
+      display: block;
+      font-size: 13px;
+      color: #495057;
+      font-weight: 700;
+      padding: 3px 0;
+      line-height: 1.4;
+      text-decoration: none;
+    }
+    .sidebar a:hover { color: #000; background: #eeeeee; text-decoration: underline; }
+    .sidebar .id { font-family: monospace; font-weight: 600; display: inline-block; width: 32px; }
+
+    .main { flex: 1; padding: 32px 40px; max-width: 960px; }
+    .orientation {
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      background: #fafafa;
+      padding: 18px;
+      margin-bottom: 32px;
+      color: #495057;
+      font-size: 14px;
+    }
+    .orientation p { margin-bottom: 10px; color: #495057; }
+    .orientation p:last-child { margin-bottom: 0; }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #000;
+      margin: 0 0 8px;
+    }
+    h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #000;
+      margin: 48px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    h2:first-child { margin-top: 0; }
+    h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #333;
+      margin: 0 0 8px;
+    }
+    p { color: #495057; margin-bottom: 12px; }
+    ul, ol { padding-left: 22px; color: #495057; margin: 8px 0 0; }
+    li { margin-bottom: 6px; }
+    code {
+      font-family: 'Courier New', Courier, monospace;
+      background: #f8f8f8;
+      border: 1px solid #dee2e6;
+      border-radius: 3px;
+      padding: 2px 5px;
+      font-size: 13px;
+      color: #333;
+    }
+    .step {
+      margin-bottom: 24px;
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .step-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: #f8f8f8;
+      border-bottom: 1px solid #dee2e6;
+    }
+    .step-head h2,
+    .step-head h3 {
+      margin: 0;
+      padding: 0;
+      border: none;
+    }
+    .step-id {
+      background: #000;
+      color: #fff;
+      font-family: monospace;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 3px 8px;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+    .step-body { padding: 16px; }
+    .note {
+      border-left: 3px solid #000;
+      background: #fafafa;
+      padding: 14px 18px;
+      margin: 18px 0;
+      border-radius: 0 4px 4px 0;
+      font-size: 14px;
+      color: #495057;
+    }
+    .example-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .example-card {
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      background: #fafafa;
+      padding: 14px;
+    }
+    .example-card strong { display: block; color: #000; margin-bottom: 4px; }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main { padding: 24px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="brand">Canvas Design Agent Workshop Pt 1</span>
+  <span class="links">
+    <a href="introduction.html">Introduction</a>
+    <a href="setup.html">01 Setup</a>
+    <a href="basic-workflow.html">02 Basic Workflow</a>
+    <a href="first-pages.html">03 First Pages</a>
+    <a href="more-pages.html">04 More Pages</a>
+    <a href="index.html">Elements</a>
+  </span>
+</nav>
+
+<div class="page">
+
+<aside class="sidebar">
+  <h4>Introduction</h4>
+  <a href="#why"><span class="id">01</span> Why This Exists</a>
+  <a href="#canvas-html"><span class="id">02</span> Canvas HTML</a>
+  <a href="#catch"><span class="id">03</span> The Catch</a>
+  <a href="#skill"><span class="id">04</span> The Skill</a>
+
+  <h4>Workshop</h4>
+  <a href="#examples"><span class="id">05</span> Examples</a>
+  <a href="#today"><span class="id">06</span> Today</a>
+  <a href="#caveats"><span class="id">07</span> Caveats</a>
+  <a href="#feedback"><span class="id">08</span> Feedback</a>
+</aside>
+
+<main class="main">
+  <div class="orientation">
+    <h1>Introduction</h1>
+    <p>This page explains why the Canvas Design Agent exists, what problem it is trying to solve, and what we are doing with it in the workshop.</p>
+  </div>
+
+  <section class="step" id="why">
+    <div class="step-head"><span class="step-id">01</span><h2>What Is the Point of This?</h2></div>
+    <div class="step-body">
+      <p>This tool came out of work I have been doing over the past few years to mitigate a few problems that keep showing up in teaching:</p>
+      <ul>
+        <li>Classes are larger.</li>
+        <li>Students have different expectations around Canvas and asynchronous engagement.</li>
+        <li>Attendance, access, and participation do not always look the same as they used to.</li>
+      </ul>
+      <p>I decided to work on this through UX inside Canvas for two main reasons:</p>
+      <ul>
+        <li>I am a design person who makes interactive things, so this is the way I know how to solve problems.</li>
+        <li>It is hard to teach the importance of UX and interaction principles through course interfaces that are mostly non-visual.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step" id="canvas-html">
+    <div class="step-head"><span class="step-id">02</span><h2>Canvas Is Just Limited HTML</h2></div>
+    <div class="step-body">
+      <p>Every page you create in Canvas is made by generating HTML. The page editor lets you work visually, but behind the scenes it is still writing HTML.</p>
+      <ul>
+        <li>Open any of your Canvas pages.</li>
+        <li>Press the <code>&lt;/&gt;</code> button.</li>
+        <li>You will see the HTML source Canvas is using to render that page.</li>
+      </ul>
+      <p>This also means you can author Canvas pages directly as HTML. That has always been possible; the awkward part is knowing which HTML and CSS Canvas will actually keep.</p>
+    </div>
+  </section>
+
+  <section class="step" id="catch">
+    <div class="step-head"><span class="step-id">03</span><h2>What Is the Catch?</h2></div>
+    <div class="step-body">
+      <p>Two things make this trickier than ordinary web design:</p>
+      <ul>
+        <li>Canvas limits which HTML elements, CSS properties, and attributes can be used. It strips stylesheets, scripts, and other features for security and platform consistency.</li>
+        <li>The exact practical limits are not always documented in a way that is useful when you are trying to design actual teaching materials.</li>
+      </ul>
+      <div class="note">
+        <p>The result is a strange design space: you can do more than the visual editor suggests, but less than a normal website allows.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" id="skill">
+    <div class="step-head"><span class="step-id">04</span><h2>What Is It?</h2></div>
+    <div class="step-body">
+      <p>Over the past year, I packaged the Canvas workflows I have been using into a generic format called a skill. A skill is basically a carefully structured text file that tells an AI coding agent how to work in a specific context.</p>
+      <p>In this case, the skill tells the agent to generate Canvas-ready HTML using a known set of rules, constraints, and reusable elements.</p>
+      <p><a href="https://github.com/npuckett/Workshop-canvas-design-agent/blob/main/SKILL.md">View the Canvas Design Agent skill on GitHub</a></p>
+    </div>
+  </section>
+
+  <section class="step" id="examples">
+    <div class="step-head"><span class="step-id">05</span><h2>A Few Examples</h2></div>
+    <div class="step-body">
+      <p>The approach comes from course and project spaces where Canvas needed to do more than hold static text.</p>
+      <div class="example-grid">
+        <div class="example-card"><strong>Atelier 1</strong><p>Course pages that needed clearer visual structure for studio work.</p></div>
+        <div class="example-card"><strong>Physical Computing</strong><p>Pages that had to support technical instructions, examples, and iterative project work.</p></div>
+        <div class="example-card"><strong>DF Thesis</strong><p>Pages that needed to organize complex milestones, resources, and student-facing guidance.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" id="today">
+    <div class="step-head"><span class="step-id">06</span><h2>What Are We Doing Today?</h2></div>
+    <div class="step-body">
+      <ul>
+        <li>Getting set up with the tools.</li>
+        <li>Learning the basic design process of working from text files to HTML to Canvas pages.</li>
+        <li>Experimenting with the tools using a fictitious course generated for the workshop.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step" id="caveats">
+    <div class="step-head"><span class="step-id">07</span><h2>Caveats</h2></div>
+    <div class="step-body">
+      <ul>
+        <li>This tool is still very much in development.</li>
+        <li>Working with web-based chat is useful for today, but it is not the ideal long-term workflow.</li>
+        <li>Part 2 in the Fall will focus on developing locally with more advanced agent tools.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step" id="feedback">
+    <div class="step-head"><span class="step-id">08</span><h2>Feedback</h2></div>
+    <div class="step-body">
+      <p>If you have comments, questions, or examples of where the tool breaks down, send them along. The point is not to pretend this is finished; the point is to make the workflow visible enough that we can improve it.</p>
+    </div>
+  </section>
+</main>
+</div>
+
+<footer style="border-top: 1px solid #e0e0e0; padding: 24px; text-align: center; font-size: 13px; color: #999;">
+  Canvas Design Agent -- Introduction
+</footer>
+
+</body>
+</html>
