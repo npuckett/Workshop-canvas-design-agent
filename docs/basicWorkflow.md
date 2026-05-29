@@ -19,7 +19,7 @@ Markdown Syntax Guide https://www.markdownguide.org/cheat-sheet/
 
 ## Example Files
 In case you missed it in the install step, these are all the files you will need.
-Example files (link to come)
+Download the example files: https://npuckett.github.io/canvas-design-agent/docs/Workshop-canvas-design-agent.zip
 
 # Basic Workflow with Web-based Chat
 ## Set Copilot to use the correct Model

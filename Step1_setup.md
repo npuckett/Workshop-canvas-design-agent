@@ -7,7 +7,8 @@ https://code.visualstudio.com/download
 - Open it
 
 # 2 Download the example files
-Download this zip file that contains the Skill file and the examples we will use from HERE (link will be updated)
+Download the zip file that contains the Skill file and the examples we will use:
+https://npuckett.github.io/canvas-design-agent/docs/Workshop-canvas-design-agent.zip
 
 - Unzip the folder to somewhere on your computer 
 
