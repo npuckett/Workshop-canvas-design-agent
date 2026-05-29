@@ -1,4 +1,4 @@
-# Course Homepage
+# Course Homepage Editable Tags
 
 Use the Canvas Design Agent skill. Transform the course homepage content below into a clear Canvas course page for students.
 
@@ -6,30 +6,68 @@ If you can create files or artifacts, create a downloadable `canvas-fragment.htm
 
 Do not show a rendered preview.
 
-Copy and paste this entire file into a chat tool with the skill.
+Copy and paste this entire file into a chat tool with the skill. The tag lines below are design instructions for the generated Canvas page. Use the tags to decide how each section should be displayed, but do not show the tag names or comment suggestions to students unless a tag is clearly meant to become a student-facing label.
 
-## Style
+Markdown comments in this file suggest other tags, colors, or elements to try. They are for workshop experimentation and should not appear in the final Canvas page.
 
-- Theme: Warm Minimal (S03)
-- Layout: welcoming course homepage with clear sections and quick links
-- Use the course image as E03 Linked Image immediately below the title/header
-- Use N02 button-styled links for the Quick Links section
-- Use a table or schedule-style element for Key Dates
+**NOTE** All text below was generated for the sake of this workshop. I don't use generated text in my actual courses.
+
+## Global Element Tags
+
+Style Tag: S03 Warm Minimal
+<!-- Try also: S01 Clean Modern, S06 Editorial, S07 Studio Light, or S04 High Contrast. -->
+
+Page Container Element: L05 Centered Container
+<!-- Try also: L06 Full-Width Section with Background, L04 CSS Grid for sidebar/main layout, or plain flow. -->
+
+Header Element: V02 Color-Coded Header
+<!-- Try also: V05 Gradient Header, V06 Dark Theme Section, or no banner for an S06 editorial title block. -->
+
+Course Image Element: E03 Linked Image
+<!-- Try also: E01 GitHub-Hosted Image if you want a plain image with caption and no link. -->
+
+Quick Links Element: N02 Button-Styled Links
+<!-- Try also: N01 Anchor Link Table of Contents, C03 Info Cards, or simple text links. -->
+
+Key Dates Element: D05 Schedule Grid
+<!-- Try also: D01 Data Table, C03 Info Cards, V01 Left-Border Accent Boxes, or C06 Ordered List Variants. -->
+
+## How To Experiment
+
+- Change one element ID at a time, then paste the whole file into a chat tool with the skill.
+- Keep this page student-facing and practical rather than turning it into a full syllabus.
+- Use comments as a menu of ideas, not as required content.
+- Keep this week's work and major deadlines visible near the top.
+
+## Page Goals
+
+Section Handling Tag: generation-instructions
+<!-- These goals should guide the output. Do not render this section as student-facing course content. -->
+
+- Make the page feel like a practical course homepage, not a syllabus wall
+- Keep this week's work and the major deadlines easy to find near the top
+- Make quick links obvious and easy to scan
+- Show the course image immediately below the title/header
+- Put longer project details after the high-priority information
 
 ## Accessibility
 
-- Use one clear h1 and ordered section headings
+Section Handling Tag: generation-instructions
+<!-- Accessibility instructions should guide the generated HTML. Do not show this section as course content. -->
+
+- Use one clear h1 and logical heading order
 - Use descriptive link text
 - Keep this week's key information visible near the top
 - Use readable contrast throughout
-
-## Output Expectations
-
-- Output a Canvas HTML fragment only
-- Use inline styles only
-- Do not include html, head, body, style, script, SVG, or markdown code fences
+- Provide descriptive alt text for images
 
 ## Course Info
+
+Section Element: C04 Definition List
+<!-- Try also: L03 Flexbox Row, C03 Info Card, C05 Styled Definition List with Border Accent, or D03 Column-Styled Table. -->
+
+Header Metadata Element: V04 Status Badge
+<!-- Try also: T02 Highlighted Text, plain text metadata, or no badge. -->
 
 Course Code: CART 398
 Course Title: Designing AI Agents: They Are Fun! and They Might Eat Us
@@ -41,8 +79,11 @@ Instructor: Oh Cadyu
 
 ## Course Image
 
-Image Element: E03 Linked Image
+Section Element: E03 Linked Image
+<!-- Try also: E01 GitHub-Hosted Image for a plain image, L07 Float Wrap for image plus welcome text, or no image for a text-only page. -->
+
 Image URL: https://dn721207.ca.archive.org/0/items/AILS_AC96-0191-4/AC96-0191-4.jpg
+Full-size link URL: https://dn721207.ca.archive.org/0/items/AILS_AC96-0191-4/AC96-0191-4.jpg
 Image Placement: Immediately below the course title/header, before course info cards or welcome text.
 Image Crop: Display as a slightly cropped landscape image near the top of the page.
 Crop Style: width: 100%; max-width: 100%; height: 520px; object-fit: cover; object-position: center 42%; display: block;
@@ -51,6 +92,12 @@ Caption: Virtual Environment for facial reconstructive surgery, 1996. Public Dom
 
 ## Welcome Message
 
+Section Element: T06 Styled Blockquote
+<!-- Try also: V01 Left-Border Accent Box, C03 Info Card, or plain paragraphs. -->
+
+Tone Tag: studio-friendly
+<!-- Try also: concise-direct, formal-academic, lightly-playful, or speculative. -->
+
 Welcome to Designing AI Agents: They Are Fun! and They Might Eat Us. In this course, we will treat AI agents as strange little collaborators: sometimes helpful, sometimes overconfident, and always worth questioning carefully before handing them the keys to anything important.
 
 This is a studio seminar about making, reading, and testing. We will read early AI theory, look closely at contemporary tools and open-source projects, and use agent-based coding workflows to build experimental interactions for phones. Your phone already knows how to steal your time and data. This course asks a better question: what else could it become if you used AI tools to design interactions that are playful, critical, useful, or delightfully unnecessary?
@@ -58,6 +105,12 @@ This is a studio seminar about making, reading, and testing. We will read early 
 No one is expected to arrive as an expert programmer or AI researcher. You are expected to document your process, ask sharper questions over time, test your work with other people, and stay alert to the difference between an impressive demo and a thoughtful interaction.
 
 ## This Week
+
+Section Element: V03 Alert / Callout Box
+<!-- Try also: V01 Left-Border Accent Box, C03 Info Card, C07 Checklist, or D03 Column-Styled Table. -->
+
+Priority Tag: high
+<!-- Try also: normal, urgent, informational, or workshop-prep. -->
 
 Week: 1
 Date: Sep 8, 2026
@@ -68,6 +121,9 @@ Due: Set up your documentation space and bring one example of an AI interaction 
 
 ## Quick Links
 
+Section Element: N02 Button-Styled Links
+<!-- Try also: N01 Anchor Link Table of Contents, C03 Info Cards, C09 Basic Unordered List, or simple text links. -->
+
 - AI history reading archive: [link]
 - Open-source AI coding tools list: [link]
 - Mobile prototyping references: [link]
@@ -76,6 +132,9 @@ Due: Set up your documentation space and bring one example of an AI interaction 
 - Consent and user testing guide: [link]
 
 ## Learning Units
+
+Section Element: C03 Info Card
+<!-- Try also: C01 Collapsible Section, L03 Flexbox Row with cards, C02 Nested Collapsibles, or C06 Ordered List Variants. -->
 
 Unit 1: Foundations and Futures (Weeks 1-2)
 We begin with early AI dreams, cybernetic feedback, and a short speculative workshop about what could happen next year.
@@ -91,6 +150,9 @@ We revise from feedback, run a second test session, and prepare final presentati
 
 ## Key Dates
 
+Section Element: D05 Schedule Grid
+<!-- Try also: D01 Data Table, C03 Info Cards, V01 Left-Border Accent Boxes, or C06 Ordered List Variants. -->
+
 - Sep 15, 2026: Workshop 1 due -- AI History and Future drawing plus 200-word response
 - Sep 29, 2026: Workshop 2 due -- Contemporary tools research blog post with images
 - Oct 20, 2026: Test Session 1 -- First user test of main project prototype
@@ -99,6 +161,12 @@ We revise from feedback, run a second test session, and prepare final presentati
 - Nov 24, 2026: Final Presentation -- Final project presentation and process archive
 
 ## Projects and Deliverables
+
+Section Element: C03 Info Card
+<!-- Try also: L03 Flexbox Row, D01 Data Table, V01 Left-Border Accent Box, or C01 Collapsible Section for details. -->
+
+Project Badge Element: V04 Status Badge
+<!-- Try also: T02 Highlighted Text, plain bold labels, or no badges. -->
 
 Workshop 1: AI History and Future
 Due: Sep 15, 2026
@@ -116,5 +184,8 @@ Weight: Test Session 1 15%, Version 1 Presentation 25%, Test Session 2 15%, Fina
 Output: Interactive phone prototype, testing documentation, process archive, and final presentation
 
 ## Instructor Note
+
+Section Element: V01 Left-Border Accent Box
+<!-- Try also: T06 Styled Blockquote, V03 Alert / Callout Box, or plain paragraph. -->
 
 This course rewards careful experiments more than flawless demos. If your prototype fails in a way that teaches you something specific, document it. If an AI tool gives you code that works but you cannot explain, slow down and investigate. The goal is not to prove that agents are magical. The goal is to learn how to design with them without surrendering your judgment at the door.

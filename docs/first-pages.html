@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>03 First Pages -- Canvas Design Agent</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      color: #333;
+      line-height: 1.6;
+      background: #fff;
+    }
+    a {
+      color: #000;
+      font-weight: 700;
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+    a:hover { color: #333; background: #f0f0f0; }
+
+    nav {
+      background: #000;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav .brand { font-weight: 700; font-size: 18px; color: #fff; }
+    nav .links { display: flex; flex-wrap: wrap; gap: 14px; }
+    nav .links a {
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+    nav .links a:hover { color: #fff; background: #333; }
+
+    .page { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      background: #f8f8f8;
+      border-right: 1px solid #dee2e6;
+      padding: 24px 16px;
+      position: sticky;
+      top: 56px;
+      height: calc(100vh - 56px);
+      overflow-y: auto;
+    }
+    .sidebar h4 {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #6c757d;
+      margin: 16px 0 8px;
+    }
+    .sidebar h4:first-child { margin-top: 0; }
+    .sidebar a {
+      display: block;
+      font-size: 13px;
+      color: #495057;
+      font-weight: 700;
+      padding: 3px 0;
+      line-height: 1.4;
+      text-decoration: none;
+    }
+    .sidebar a:hover { color: #000; background: #eeeeee; text-decoration: underline; }
+    .sidebar .id { font-family: monospace; font-weight: 600; display: inline-block; width: 32px; }
+
+    .main { flex: 1; padding: 32px 40px; max-width: 1000px; }
+    .orientation {
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      background: #fafafa;
+      padding: 18px;
+      margin-bottom: 32px;
+      color: #495057;
+      font-size: 14px;
+    }
+    .orientation p { margin-bottom: 10px; color: #495057; }
+    .orientation p:last-child { margin-bottom: 0; }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #000;
+      margin: 0 0 8px;
+    }
+    h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #000;
+      margin: 48px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    h2:first-child { margin-top: 0; }
+    h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #333;
+      margin: 0 0 8px;
+    }
+    .step-body h4 {
+      font-size: 15px;
+      font-weight: 800;
+      color: #000;
+      margin: 18px 0 8px;
+    }
+    p { color: #495057; margin-bottom: 12px; }
+    ul, ol { padding-left: 22px; color: #495057; margin: 8px 0 0; }
+    li { margin-bottom: 6px; }
+    code {
+      font-family: 'Courier New', Courier, monospace;
+      background: #f8f8f8;
+      border: 1px solid #dee2e6;
+      border-radius: 3px;
+      padding: 2px 5px;
+      font-size: 13px;
+      color: #333;
+    }
+    .step {
+      margin-bottom: 24px;
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .step-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: #f8f8f8;
+      border-bottom: 1px solid #dee2e6;
+    }
+    .step-head h2,
+    .step-head h3 {
+      margin: 0;
+      padding: 0;
+      border: none;
+    }
+    .step-id {
+      background: #000;
+      color: #fff;
+      font-family: monospace;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 3px 8px;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+    .step-body { padding: 16px; }
+    .note {
+      border-left: 3px solid #000;
+      background: #fafafa;
+      padding: 14px 18px;
+      margin: 18px 0;
+      border-radius: 0 4px 4px 0;
+      font-size: 14px;
+      color: #495057;
+    }
+    .file-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .file-card {
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      background: #fafafa;
+      padding: 14px;
+    }
+    .file-card code { display: inline-block; margin-bottom: 8px; }
+    .answer-card {
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      background: #fff;
+    }
+    .answer-head {
+      background: #f8f8f8;
+      border-bottom: 1px solid #dee2e6;
+      padding: 12px 16px;
+    }
+    .answer-head p { margin: 0; font-size: 13px; color: #6c757d; }
+    .answer-preview {
+      padding: 18px;
+      background: #ffffff;
+      overflow-x: auto;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main { padding: 24px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="brand">Canvas Design Agent</span>
+  <span class="links">
+    <a href="setup.html">01 Setup</a>
+    <a href="basic-workflow.html">02 Basic Workflow</a>
+    <a href="first-pages.html">03 First Pages</a>
+    <a href="index.html">Elements</a>
+  </span>
+</nav>
+
+<div class="page">
+
+<aside class="sidebar">
+  <h4>Start Here</h4>
+  <a href="#before-starting"><span class="id">01</span> Before Starting</a>
+  <a href="#markdown-files"><span class="id">02</span> Markdown Files</a>
+
+  <h4>Generate</h4>
+  <a href="#first-page"><span class="id">03</span> First Page</a>
+  <a href="#next-steps"><span class="id">04</span> Next Steps</a>
+  <a href="#more-controls"><span class="id">05</span> More Controls</a>
+  <a href="#important-note"><span class="id">06</span> Important Note</a>
+
+  <h4>Outcome</h4>
+  <a href="#theanswers"><span class="id">07</span> theAnswers</a>
+</aside>
+
+<main class="main">
+  <div class="orientation">
+    <h1>03 First Pages</h1>
+    <p>This page walks through the first starter prompts in <code>01_getting_started</code>. The goal is to generate one simple Canvas page, then change one thing at a time so you can see how the prompt structure affects the output.</p>
+  </div>
+
+  <section class="step" id="before-starting">
+    <div class="step-head"><span class="step-id">01</span><h2>Before Starting</h2></div>
+    <div class="step-body">
+      <p>Make sure you have gone through <a href="setup.html">01 Setup</a> and <a href="basic-workflow.html">02 Basic Workflow</a>.</p>
+      <p>This guide uses the same web-based chat workflow: choose a quick-response model, upload <code>SKILL.md</code>, paste a Markdown prompt, then move the generated HTML into Canvas.</p>
+      <div class="note">
+        <p>If any step feels too compressed here, go back to the Basic Workflow page for the slower version with screenshots.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" id="markdown-files">
+    <div class="step-head"><span class="step-id">02</span><h2>Understanding the Markdown Files</h2></div>
+    <div class="step-body">
+      <p>In the example files, open the <code>01_getting_started</code> folder. It contains three starter prompts:</p>
+      <div class="file-grid">
+        <div class="file-card">
+          <code>00-no-style-class-page.md</code>
+          <p>This is the base file. It gives the agent course content and page goals, but does not request a specific visual style.</p>
+        </div>
+        <div class="file-card">
+          <code>01-single-style-class-page.md</code>
+          <p>This version adds one whole-page style input at the top: <code>Style: S01 Clean Modern</code>. Change that single line to test another theme.</p>
+        </div>
+        <div class="file-card">
+          <code>02-section-style-class-page.md</code>
+          <p>This version uses multiple section-level element tags. It gives you more specific control over headers, images, lists, callouts, links, and other page parts.</p>
+        </div>
+      </div>
+      <p>The Markdown files are where you input course content, describe the basic page structure, and tag sections with visual elements from the <a href="index.html">Elements catalog</a>.</p>
+    </div>
+  </section>
+
+  <section class="step" id="first-page">
+    <div class="step-head"><span class="step-id">03</span><h2>Your First Generated Canvas Page</h2></div>
+    <div class="step-body">
+      <ol>
+        <li>Open a new Copilot Chat session and make sure the correct quick-response model is selected.</li>
+        <li>Upload <code>SKILL.md</code> to the chat.</li>
+        <li>Open <code>01_getting_started/01-single-style-class-page.md</code> in VS Code.</li>
+        <li>Copy and paste the full contents of that file into the chat.</li>
+        <li>Press enter to generate the Canvas HTML.</li>
+        <li>Download the generated code or copy it from the code block into a new file in VS Code.</li>
+        <li>Create a new Canvas page and paste the HTML into the Canvas HTML editor.</li>
+      </ol>
+      <p>The first generated page should be simple, readable, and close to the source content. That is good. This first pass is about seeing the workflow work.</p>
+    </div>
+  </section>
+
+  <section class="step" id="next-steps">
+    <div class="step-head"><span class="step-id">04</span><h2>Next Steps</h2></div>
+    <div class="step-body">
+      <ul>
+        <li>Change the single style line in <code>01-single-style-class-page.md</code>.</li>
+        <li>Try one of the styles listed in the Markdown comment below that line.</li>
+        <li>Run the same prompt again.</li>
+        <li>Compare the new output with the first version.</li>
+      </ul>
+      <p>At this stage, do not change everything at once. Change one style tag, generate the page, and look at what moved.</p>
+    </div>
+  </section>
+
+  <section class="step" id="more-controls">
+    <div class="step-head"><span class="step-id">05</span><h2>A Few More Controls</h2></div>
+    <div class="step-body">
+      <ul>
+        <li>Open <code>01_getting_started/02-section-style-class-page.md</code>.</li>
+        <li>Follow the same generate, download, and copy-paste workflow.</li>
+        <li>Use the <a href="index.html">Elements catalog</a> to look up other styles and elements that can be applied to the text.</li>
+        <li>Try changing a section element, such as the header, quick info block, current project callout, checklist, or button links.</li>
+        <li>See how different the page can become without changing the course content.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step" id="important-note">
+    <div class="step-head"><span class="step-id">06</span><h2>Important Note</h2></div>
+    <div class="step-body">
+      <p>Once <code>SKILL.md</code> is uploaded to the chat, you can ask the agent questions about the skill and how to use it.</p>
+      <p>For example, ask what a style tag means, what element would work best for a schedule, or why Canvas needs raw HTML source instead of a rendered preview.</p>
+    </div>
+  </section>
+
+  <h2 id="theanswers">theAnswers</h2>
+  <p>These are the pre-generated outcomes from <code>01_getting_started/theAnswers</code>. Use them to compare your generated page against a known working result.</p>
+
+  <article class="answer-card">
+    <div class="answer-head">
+      <h3>No Style Class Page</h3>
+      <p><code>01_getting_started/theAnswers/00-no-style-class-page/default.html</code></p>
+    </div>
+    <div class="answer-preview">
+<div style="max-width: 800px; margin: 0 auto; padding: 24px; font-family: system-ui, -apple-system, sans-serif; font-size: 15px; line-height: 1.5; color: #333333; background: #ffffff;">
+  <h1 style="margin: 0 0 8px; font-size: 26px; font-weight: 700; color: #222222;">Class 01: What is an agent?</h1>
+  <p style="margin: 0 0 4px; color: #555555;"><strong>Course:</strong> CART 398 -- Designing AI Agents: They Are Fun! and They Might Eat Us</p>
+  <p style="margin: 0 0 4px; color: #555555;"><strong>Date:</strong> Sep 8, 2026</p>
+  <p style="margin: 0 0 20px; color: #555555;"><strong>Focus:</strong> What is an agent, and why do designers keep giving software jobs it may not deserve?</p>
+
+  <figure style="margin: 0 0 24px; text-align: center;">
+    <img src="https://dn721207.ca.archive.org/0/items/AILS_AC96-0191-4/AC96-0191-4.jpg" alt="Dr Ross and Rei Cheng wearing 3D glasses while maneuvering a reconstructed skull and tissue model for facial reconstructive surgery." style="max-width: 100%; height: auto; border-radius: 4px;">
+    <figcaption style="margin-top: 8px; font-size: 13px; color: #666666; font-style: italic;">Virtual Environment for facial reconstructive surgery, 1996. Public Domain. Internet Archive item AILS_AC96-0191-4.</figcaption>
+  </figure>
+
+  <h2 style="margin: 24px 0 10px; font-size: 20px; font-weight: 700; color: #222222;">Quick Info</h2>
+  <ul style="margin: 0 0 20px; padding-left: 22px; color: #333333;">
+    <li style="margin-bottom: 6px;"><strong>Time:</strong> Tuesdays, 1:00-3:45 PM</li>
+    <li style="margin-bottom: 6px;"><strong>Room:</strong> EV 7.735 Studio Lab</li>
+    <li style="margin-bottom: 6px;"><strong>Instructor:</strong> Oh Cadyu</li>
+    <li style="margin-bottom: 6px;"><strong>Class Type:</strong> Seminar and setup workshop</li>
+  </ul>
+
+  <h2 style="margin: 24px 0 10px; font-size: 20px; font-weight: 700; color: #222222;">Current Project</h2>
+  <p style="margin: 0 0 6px;"><strong>Project:</strong> Documentation space setup</p>
+  <p style="margin: 0 0 6px;"><strong>Purpose:</strong> Create a place to collect prompts, code changes, sources, screenshots, tests, and short reflections throughout the course.</p>
+  <p style="margin: 0 0 6px;"><strong>Today:</strong> Start the documentation space and add one AI interaction example.</p>
+  <p style="margin: 0 0 20px;"><strong>Why it matters:</strong> The course rewards careful experiments more than flawless demos, so process notes are part of the work.</p>
+
+  <h2 style="margin: 24px 0 10px; font-size: 20px; font-weight: 700; color: #222222;">Today in Class</h2>
+  <ol style="margin: 0 0 20px; padding-left: 24px; color: #333333;">
+    <li style="margin-bottom: 6px;">Course introduction</li>
+    <li style="margin-bottom: 6px;">Agent vocabulary</li>
+    <li style="margin-bottom: 6px;">Examples of helpful and unhelpful automation</li>
+    <li style="margin-bottom: 6px;">Small-group scenario exercise</li>
+    <li style="margin-bottom: 6px;">Project notebook setup</li>
+  </ol>
+
+  <h2 style="margin: 24px 0 10px; font-size: 20px; font-weight: 700; color: #222222;">Reading</h2>
+  <p style="margin: 0 0 20px;">Alan Turing, "Computing Machinery and Intelligence" (1950), excerpts</p>
+
+  <h2 style="margin: 24px 0 10px; font-size: 20px; font-weight: 700; color: #222222;">Due Before Next Class</h2>
+  <ul style="margin: 0 0 20px; padding-left: 22px; color: #333333;">
+    <li style="margin-bottom: 6px;">Set up your documentation space</li>
+    <li style="margin-bottom: 6px;">Add your first AI interaction example</li>
+    <li style="margin-bottom: 6px;">Write a few notes about what made the example promising, confusing, or suspicious</li>
+  </ul>
+
+  <h2 style="margin: 24px 0 10px; font-size: 20px; font-weight: 700; color: #222222;">Links</h2>
+  <ul style="margin: 0; padding-left: 22px; color: #333333;">
+    <li style="margin-bottom: 6px;"><a href="#" style="color: #0066cc; font-weight: 700;">Course syllabus</a></li>
+    <li style="margin-bottom: 6px;"><a href="#" style="color: #0066cc; font-weight: 700;">Documentation template</a></li>
+    <li style="margin-bottom: 6px;"><a href="#" style="color: #0066cc; font-weight: 700;">AI history reading archive</a></li>
+  </ul>
+</div>
+    </div>
+  </article>
+
+  <article class="answer-card">
+    <div class="answer-head">
+      <h3>Single Style Class Page</h3>
+      <p><code>01_getting_started/theAnswers/01-single-style-class-page/s01-clean-modern.html</code></p>
+    </div>
+    <div class="answer-preview">
+<div style="max-width: 820px; margin: 0 auto; padding: 24px; font-family: system-ui, -apple-system, sans-serif; font-size: 15px; line-height: 1.5; color: #495057; background: #ffffff;">
+  <div style="background: linear-gradient(135deg, #0066cc, #004499); color: #ffffff; padding: 22px 20px; margin-bottom: 24px; border-radius: 4px;">
+    <p style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #cce5ff;">CART 398 / Sep 8, 2026</p>
+    <h1 style="margin: 0; font-size: 26px; font-weight: 700; color: #ffffff; font-family: system-ui, -apple-system, sans-serif;">Class 01: What is an agent?</h1>
+    <p style="margin: 8px 0 0; color: #cce5ff;">What is an agent, and why do designers keep giving software jobs it may not deserve?</p>
+  </div>
+
+  <div style="text-align: center; margin: 0 0 24px;">
+    <a href="https://dn721207.ca.archive.org/0/items/AILS_AC96-0191-4/AC96-0191-4.jpg" target="_blank" rel="noopener" style="display: block; text-decoration: none;">
+      <img src="https://dn721207.ca.archive.org/0/items/AILS_AC96-0191-4/AC96-0191-4.jpg" alt="Dr Ross and Rei Cheng wearing 3D glasses while maneuvering a reconstructed skull and tissue model for facial reconstructive surgery." style="width: 100%; max-width: 100%; height: 360px; object-fit: cover; object-position: center 42%; display: block; border-radius: 4px;">
+    </a>
+    <p style="font-size: 13px; color: #6c757d; margin: 8px 0 0;">Virtual Environment for facial reconstructive surgery, 1996. Public Domain. Internet Archive item AILS_AC96-0191-4.</p>
+  </div>
+
+  <h2 style="color: #333333; font-size: 20px; font-weight: 700; padding-bottom: 8px; border-bottom: 2px solid #0066cc; margin: 28px 0 16px; font-family: system-ui, -apple-system, sans-serif;">Quick Info</h2>
+  <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px;">
+    <div style="flex: 1; min-width: 170px; background: #f8f8f8; border: 1px solid #dee2e6; border-radius: 4px; padding: 12px;"><p style="margin: 0 0 4px; color: #6c757d; font-size: 13px; font-weight: 700;">Time</p><p style="margin: 0; color: #333333;">Tuesdays, 1:00-3:45 PM</p></div>
+    <div style="flex: 1; min-width: 170px; background: #f8f8f8; border: 1px solid #dee2e6; border-radius: 4px; padding: 12px;"><p style="margin: 0 0 4px; color: #6c757d; font-size: 13px; font-weight: 700;">Room</p><p style="margin: 0; color: #333333;">EV 7.735 Studio Lab</p></div>
+    <div style="flex: 1; min-width: 170px; background: #f8f8f8; border: 1px solid #dee2e6; border-radius: 4px; padding: 12px;"><p style="margin: 0 0 4px; color: #6c757d; font-size: 13px; font-weight: 700;">Instructor</p><p style="margin: 0; color: #333333;">Oh Cadyu</p></div>
+    <div style="flex: 1; min-width: 170px; background: #f8f8f8; border: 1px solid #dee2e6; border-radius: 4px; padding: 12px;"><p style="margin: 0 0 4px; color: #6c757d; font-size: 13px; font-weight: 700;">Class Type</p><p style="margin: 0; color: #333333;">Seminar and setup workshop</p></div>
+  </div>
+
+  <div style="border-left: 4px solid #0066cc; padding: 16px; margin: 16px 0 24px; background: #f8f8f8; border-radius: 0 4px 4px 0;">
+    <h2 style="margin: 0 0 8px; color: #333333; font-size: 20px; font-weight: 700; font-family: system-ui, -apple-system, sans-serif;">Current Project</h2>
+    <p style="margin: 0 0 6px;"><strong>Project:</strong> Documentation space setup</p>
+    <p style="margin: 0 0 6px;"><strong>Purpose:</strong> Create a place to collect prompts, code changes, sources, screenshots, tests, and short reflections throughout the course.</p>
+    <p style="margin: 0 0 6px;"><strong>Today:</strong> Start the documentation space and add one AI interaction example.</p>
+    <p style="margin: 0;"><strong>Why it matters:</strong> The course rewards careful experiments more than flawless demos, so process notes are part of the work.</p>
+  </div>
+
+  <h2 style="color: #333333; font-size: 20px; font-weight: 700; padding-bottom: 8px; border-bottom: 2px solid #0066cc; margin: 28px 0 16px; font-family: system-ui, -apple-system, sans-serif;">Today in Class</h2>
+  <ol style="margin: 0 0 24px; padding-left: 24px; color: #495057;">
+    <li style="margin-bottom: 6px;">Course introduction</li>
+    <li style="margin-bottom: 6px;">Agent vocabulary</li>
+    <li style="margin-bottom: 6px;">Examples of helpful and unhelpful automation</li>
+    <li style="margin-bottom: 6px;">Small-group scenario exercise</li>
+    <li style="margin-bottom: 6px;">Project notebook setup</li>
+  </ol>
+
+  <div style="border: 1px solid #dee2e6; border-radius: 4px; margin-bottom: 24px; overflow: hidden;">
+    <div style="background: #f8f8f8; padding: 12px 16px; font-weight: 700; color: #333333; border-bottom: 1px solid #dee2e6;">Reading</div>
+    <div style="padding: 16px;"><p style="margin: 0; color: #495057;">Alan Turing, "Computing Machinery and Intelligence" (1950), excerpts</p></div>
+  </div>
+
+  <h2 style="color: #333333; font-size: 20px; font-weight: 700; padding-bottom: 8px; border-bottom: 2px solid #0066cc; margin: 28px 0 16px; font-family: system-ui, -apple-system, sans-serif;">Due Before Next Class</h2>
+  <ul style="list-style: none; padding-left: 8px; color: #495057; margin: 0 0 24px;">
+    <li style="margin-bottom: 6px;">&#9744; Set up your documentation space</li>
+    <li style="margin-bottom: 6px;">&#9744; Add your first AI interaction example</li>
+    <li style="margin-bottom: 6px;">&#9744; Write a few notes about what made the example promising, confusing, or suspicious</li>
+  </ul>
+
+  <h2 style="color: #333333; font-size: 20px; font-weight: 700; padding-bottom: 8px; border-bottom: 2px solid #0066cc; margin: 28px 0 16px; font-family: system-ui, -apple-system, sans-serif;">Links</h2>
+  <div style="display: flex; gap: 12px; flex-wrap: wrap; margin: 0;"><a href="#" style="display: inline-block; padding: 10px 16px; background: #0066cc; color: #ffffff; text-decoration: none; border-radius: 4px; font-weight: 700;">Course syllabus</a><a href="#" style="display: inline-block; padding: 10px 16px; background: #0066cc; color: #ffffff; text-decoration: none; border-radius: 4px; font-weight: 700;">Documentation template</a><a href="#" style="display: inline-block; padding: 10px 16px; background: #0066cc; color: #ffffff; text-decoration: none; border-radius: 4px; font-weight: 700;">AI history reading archive</a></div>
+</div>
+    </div>
+  </article>
+
+  <article class="answer-card">
+    <div class="answer-head">
+      <h3>Section Style Class Page</h3>
+      <p><code>01_getting_started/theAnswers/02-section-style-class-page/s01-clean-modern.html</code></p>
+    </div>
+    <div class="answer-preview">
+<div style="max-width: 820px; margin: 0 auto; padding: 24px; font-family: system-ui, -apple-system, sans-serif; font-size: 15px; line-height: 1.5; color: #495057; background: #ffffff;">
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px;">
+    <div style="background: #f8f8f8; border: 1px solid #dee2e6; border-radius: 4px; padding: 12px;"><strong style="display: block; color: #6c757d; font-size: 13px;">Course Code</strong><span style="color: #333333;">CART 398</span></div>
+    <div style="background: #f8f8f8; border: 1px solid #dee2e6; border-radius: 4px; padding: 12px;"><strong style="display: block; color: #6c757d; font-size: 13px;">Term</strong><span style="color: #333333;">Fall 2026</span></div>
+    <div style="background: #f8f8f8; border: 1px solid #dee2e6; border-radius: 4px; padding: 12px;"><strong style="display: block; color: #6c757d; font-size: 13px;">Meeting Time</strong><span style="color: #333333;">Tuesdays, 1:00-3:45 PM</span></div>
+    <div style="background: #f8f8f8; border: 1px solid #dee2e6; border-radius: 4px; padding: 12px;"><strong style="display: block; color: #6c757d; font-size: 13px;">Room</strong><span style="color: #333333;">EV 7.735 Studio Lab</span></div>
+  </div>
+
+  <div style="background: #0066cc; color: #ffffff; padding: 20px; margin-bottom: 24px; border-radius: 4px;">
+    <p style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #cce5ff;">Sep 8, 2026</p>
+    <h1 style="margin: 0; font-size: 26px; font-weight: 700; color: #ffffff; font-family: system-ui, -apple-system, sans-serif;">Class 01: What is an agent?</h1>
+    <p style="margin: 8px 0 0; color: #cce5ff;">What is an agent, and why do designers keep giving software jobs it may not deserve?</p>
+  </div>
+
+  <div style="text-align: center; margin: 0 0 24px;">
+    <a href="https://dn721207.ca.archive.org/0/items/AILS_AC96-0191-4/AC96-0191-4.jpg" target="_blank" rel="noopener" style="display: block; text-decoration: none;">
+      <img src="https://dn721207.ca.archive.org/0/items/AILS_AC96-0191-4/AC96-0191-4.jpg" alt="Dr Ross and Rei Cheng wearing 3D glasses while maneuvering a reconstructed skull and tissue model for facial reconstructive surgery." style="width: 100%; max-width: 100%; height: 360px; object-fit: cover; object-position: center 42%; display: block; border-radius: 4px;">
+    </a>
+    <p style="font-size: 13px; color: #6c757d; margin: 8px 0 0;">Virtual Environment for facial reconstructive surgery, 1996. Public Domain. Internet Archive item AILS_AC96-0191-4.</p>
+  </div>
+
+  <h2 style="color: #333333; font-size: 20px; font-weight: 700; padding-bottom: 8px; border-bottom: 2px solid #0066cc; margin: 28px 0 16px; font-family: system-ui, -apple-system, sans-serif;">Quick Info</h2>
+  <dl style="margin: 0 0 24px; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px;">
+    <div style="background: #f8f8f8; border: 1px solid #dee2e6; border-radius: 4px; padding: 12px;"><dt style="font-weight: 700; color: #6c757d; font-size: 13px; margin: 0 0 4px;">Time</dt><dd style="margin: 0; color: #333333;">Tuesdays, 1:00-3:45 PM</dd></div>
+    <div style="background: #f8f8f8; border: 1px solid #dee2e6; border-radius: 4px; padding: 12px;"><dt style="font-weight: 700; color: #6c757d; font-size: 13px; margin: 0 0 4px;">Room</dt><dd style="margin: 0; color: #333333;">EV 7.735 Studio Lab</dd></div>
+    <div style="background: #f8f8f8; border: 1px solid #dee2e6; border-radius: 4px; padding: 12px;"><dt style="font-weight: 700; color: #6c757d; font-size: 13px; margin: 0 0 4px;">Instructor</dt><dd style="margin: 0; color: #333333;">Oh Cadyu</dd></div>
+    <div style="background: #f8f8f8; border: 1px solid #dee2e6; border-radius: 4px; padding: 12px;"><dt style="font-weight: 700; color: #6c757d; font-size: 13px; margin: 0 0 4px;">Class Type</dt><dd style="margin: 0; color: #333333;">Seminar and setup workshop</dd></div>
+  </dl>
+
+  <div style="border-left: 4px solid #0066cc; padding: 16px; margin: 16px 0 24px; background: #f8f8f8; border-radius: 0 4px 4px 0;">
+    <strong style="color: #333333;">Current Project:</strong>
+    <span style="color: #495057;"> Documentation space setup</span>
+    <p style="margin: 8px 0 0; color: #495057;">Create a place to collect prompts, code changes, sources, screenshots, tests, and short reflections throughout the course. Today, start the documentation space and add one AI interaction example.</p>
+  </div>
+
+  <h2 style="color: #333333; font-size: 20px; font-weight: 700; padding-bottom: 8px; border-bottom: 2px solid #0066cc; margin: 28px 0 16px; font-family: system-ui, -apple-system, sans-serif;">Today in Class</h2>
+  <ol style="margin: 0 0 24px; padding-left: 24px; color: #495057;">
+    <li style="margin-bottom: 6px;">Course introduction</li>
+    <li style="margin-bottom: 6px;">Agent vocabulary</li>
+    <li style="margin-bottom: 6px;">Examples of helpful and unhelpful automation</li>
+    <li style="margin-bottom: 6px;">Small-group scenario exercise</li>
+    <li style="margin-bottom: 6px;">Project notebook setup</li>
+  </ol>
+
+  <div style="border: 1px solid #dee2e6; border-radius: 4px; margin-bottom: 24px; overflow: hidden;">
+    <div style="background: #f8f8f8; padding: 12px 16px; font-weight: 700; color: #333333; border-bottom: 1px solid #dee2e6;">Reading</div>
+    <div style="padding: 16px;"><p style="margin: 0; color: #495057;">Alan Turing, "Computing Machinery and Intelligence" (1950), excerpts</p></div>
+  </div>
+
+  <h2 style="color: #333333; font-size: 20px; font-weight: 700; padding-bottom: 8px; border-bottom: 2px solid #0066cc; margin: 28px 0 16px; font-family: system-ui, -apple-system, sans-serif;">Due Before Next Class</h2>
+  <ul style="list-style: none; padding-left: 8px; color: #495057; margin: 0 0 24px;">
+    <li style="margin-bottom: 6px;">&#9744; Set up your documentation space</li>
+    <li style="margin-bottom: 6px;">&#9744; Add your first AI interaction example</li>
+    <li style="margin-bottom: 6px;">&#9744; Write a few notes about what made the example promising, confusing, or suspicious</li>
+  </ul>
+
+  <h2 style="color: #333333; font-size: 20px; font-weight: 700; padding-bottom: 8px; border-bottom: 2px solid #0066cc; margin: 28px 0 16px; font-family: system-ui, -apple-system, sans-serif;">Links</h2>
+  <div style="display: flex; gap: 12px; flex-wrap: wrap; margin: 0;"><a href="#" style="display: inline-block; padding: 10px 16px; background: #0066cc; color: #ffffff; text-decoration: none; border-radius: 4px; font-weight: 700;">Course syllabus</a><a href="#" style="display: inline-block; padding: 10px 16px; background: #0066cc; color: #ffffff; text-decoration: none; border-radius: 4px; font-weight: 700;">Documentation template</a><a href="#" style="display: inline-block; padding: 10px 16px; background: #0066cc; color: #ffffff; text-decoration: none; border-radius: 4px; font-weight: 700;">AI history reading archive</a></div>
+</div>
+    </div>
+  </article>
+</main>
+</div>
+
+<footer style="border-top: 1px solid #e0e0e0; padding: 24px; text-align: center; font-size: 13px; color: #999;">
+  Canvas Design Agent -- First Pages
+</footer>
+
+</body>
+</html>

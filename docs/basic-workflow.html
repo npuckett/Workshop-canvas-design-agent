@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>02 Basic Workflow -- Canvas Design Agent</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      color: #333;
+      line-height: 1.6;
+      background: #fff;
+    }
+    a {
+      color: #000;
+      font-weight: 700;
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+    a:hover { color: #333; background: #f0f0f0; }
+
+    nav {
+      background: #000;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav .brand { font-weight: 700; font-size: 18px; color: #fff; }
+    nav .links { display: flex; flex-wrap: wrap; gap: 14px; }
+    nav .links a {
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+    nav .links a:hover { color: #fff; background: #333; }
+
+    .page { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      background: #f8f8f8;
+      border-right: 1px solid #dee2e6;
+      padding: 24px 16px;
+      position: sticky;
+      top: 56px;
+      height: calc(100vh - 56px);
+      overflow-y: auto;
+    }
+    .sidebar h4 {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #6c757d;
+      margin: 16px 0 8px;
+    }
+    .sidebar h4:first-child { margin-top: 0; }
+    .sidebar a {
+      display: block;
+      font-size: 13px;
+      color: #495057;
+      font-weight: 700;
+      padding: 3px 0;
+      line-height: 1.4;
+      text-decoration: none;
+    }
+    .sidebar a:hover { color: #000; background: #eeeeee; text-decoration: underline; }
+    .sidebar .id { font-family: monospace; font-weight: 600; display: inline-block; width: 32px; }
+
+    .main { flex: 1; padding: 32px 40px; max-width: 900px; }
+    .orientation {
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      background: #fafafa;
+      padding: 18px;
+      margin-bottom: 32px;
+      color: #495057;
+      font-size: 14px;
+    }
+    .orientation p { margin-bottom: 10px; color: #495057; }
+    .orientation p:last-child { margin-bottom: 0; }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #000;
+      margin: 0 0 8px;
+    }
+    h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #000;
+      margin: 48px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    h2:first-child { margin-top: 0; }
+    h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #333;
+      margin: 0 0 8px;
+    }
+    .step-body h4 {
+      font-size: 15px;
+      font-weight: 800;
+      color: #000;
+      margin: 18px 0 8px;
+    }
+    p { color: #495057; margin-bottom: 12px; }
+    ul, ol { padding-left: 22px; color: #495057; margin: 8px 0 0; }
+    li { margin-bottom: 6px; }
+    code {
+      font-family: 'Courier New', Courier, monospace;
+      background: #f8f8f8;
+      border: 1px solid #dee2e6;
+      border-radius: 3px;
+      padding: 2px 5px;
+      font-size: 13px;
+      color: #333;
+    }
+    .step {
+      margin-bottom: 24px;
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .step-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: #f8f8f8;
+      border-bottom: 1px solid #dee2e6;
+    }
+    .step-head h2,
+    .step-head h3 {
+      margin: 0;
+      padding: 0;
+      border: none;
+    }
+    .step-id {
+      background: #000;
+      color: #fff;
+      font-family: monospace;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 3px 8px;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+    .step-body { padding: 16px; }
+    .note {
+      border-left: 3px solid #000;
+      background: #fafafa;
+      padding: 14px 18px;
+      margin: 18px 0;
+      border-radius: 0 4px 4px 0;
+      font-size: 14px;
+      color: #495057;
+    }
+    figure {
+      margin: 16px 0 4px;
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #f8f8f8;
+    }
+    figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: #fff;
+    }
+    figcaption {
+      padding: 10px 12px;
+      font-size: 13px;
+      color: #6c757d;
+      border-top: 1px solid #dee2e6;
+      background: #fafafa;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main { padding: 24px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="brand">Canvas Design Agent</span>
+  <span class="links">
+    <a href="setup.html">01 Setup</a>
+    <a href="basic-workflow.html">02 Basic Workflow</a>
+    <a href="first-pages.html">03 First Pages</a>
+    <a href="index.html">Elements</a>
+  </span>
+</nav>
+
+<div class="page">
+
+<aside class="sidebar">
+  <h4>Important Links</h4>
+  <a href="#canvas-page"><span class="id">01</span> Canvas Page</a>
+  <a href="#copilot-chat"><span class="id">02</span> Copilot Chat</a>
+  <a href="#markdown"><span class="id">03</span> Markdown</a>
+  <a href="#example-files"><span class="id">04</span> Example Files</a>
+
+  <h4>Workflow</h4>
+  <a href="#model"><span class="id">05</span> Model</a>
+  <a href="#skill"><span class="id">06</span> Skill Context</a>
+  <a href="#prompt"><span class="id">07</span> Prompt</a>
+  <a href="#copy-html"><span class="id">08</span> Copy HTML</a>
+  <a href="#canvas-html"><span class="id">09</span> Use in Canvas</a>
+
+  <h4>Problems</h4>
+  <a href="#worked"><span class="id">10</span> Did It Work?</a>
+  <a href="#rendered"><span class="id">11</span> Rendered HTML</a>
+  <a href="#wrong"><span class="id">12</span> Something Wrong</a>
+</aside>
+
+<main class="main">
+  <div class="orientation">
+    <h1>02 Basic Workflow</h1>
+    <p>This workflow uses web-based chat to turn workshop prompt files into Canvas-ready HTML, then paste that HTML into a Canvas page.</p>
+  </div>
+
+  <h2>Important Links</h2>
+
+  <section class="step" id="canvas-page">
+    <div class="step-head"><span class="step-id">01</span><h3>Workshop Canvas Page</h3></div>
+    <div class="step-body">
+      <p>You should have received an invitation to join this page today. Check your OCAD email.</p>
+      <p><a href="https://canvascloud.ocadu.ca/courses/14047">Open the workshop Canvas page</a></p>
+      <p>Create course pages there to test out the code you generate.</p>
+    </div>
+  </section>
+
+  <section class="step" id="copilot-chat">
+    <div class="step-head"><span class="step-id">02</span><h3>Copilot Chat</h3></div>
+    <div class="step-body">
+      <p>There are many different Copilots in the Microsoft suite, but we will focus on Copilot Chat to generate our Canvas HTML. If you prefer another chat tool, such as Claude or ChatGPT, you can use that too.</p>
+      <ul>
+        <li>Sign into your OCAD account</li>
+        <li>Go to <a href="https://m365.cloud.microsoft/chat">Microsoft 365 Copilot Chat</a></li>
+      </ul>
+      <div class="note">
+        <p>If it says you need a subscription, sign into your OCAD account from the bottom left corner of the page.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" id="markdown">
+    <div class="step-head"><span class="step-id">03</span><h3>Markdown</h3></div>
+    <div class="step-body">
+      <p>Markdown is an open data format created in 2004 as a simple text format that establishes hierarchy and simple styling through basic symbols.</p>
+      <p>It has become an important tool when working with agent-based AI because it lets you provide more complex instruction sets to an agent working on a task.</p>
+      <p>We will use Markdown to create the instructions for building Canvas pages.</p>
+      <p><a href="https://www.markdownguide.org/cheat-sheet/">Open the Markdown Syntax Guide</a></p>
+    </div>
+  </section>
+
+  <section class="step" id="example-files">
+    <div class="step-head"><span class="step-id">04</span><h3>Example Files</h3></div>
+    <div class="step-body">
+      <p>In case you missed it in the install step, these are all the files you will need.</p>
+      <p>Example files link to come.</p>
+    </div>
+  </section>
+
+  <h2>Basic Workflow with Web-Based Chat</h2>
+
+  <section class="step" id="model">
+    <div class="step-head"><span class="step-id">05</span><h3>Set Copilot to use the correct model</h3></div>
+    <div class="step-body">
+      <p>By default, Copilot will often leave the model choice set to Auto. This can make the output type less predictable.</p>
+      <ul>
+        <li>In the top left corner, press the plus sign</li>
+        <li>Select the newest GPT model that has <strong>Quick Response</strong></li>
+      </ul>
+      <p>In this workflow, having the model overthink tends to lead to worse results and can make it render the webpage instead of generating the raw code.</p>
+      <figure>
+        <img src="assets/modelPick.png" alt="Copilot model picker showing GPT quick response model options.">
+        <figcaption>Select a Quick Response GPT model rather than Auto.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="step" id="skill">
+    <div class="step-head"><span class="step-id">06</span><h3>Upload the Canvas skill as context</h3></div>
+    <div class="step-body">
+      <p>A skill is a platform-agnostic set of tools and instructions used by AI agents to tailor the work toward specific outcomes. Like most things with AI agents, it is just a text file with particular formatting.</p>
+      <p>You can find <code>SKILL.md</code> in the example files for today.</p>
+    </div>
+  </section>
+
+  <section class="step" id="prompt">
+    <div class="step-head"><span class="step-id">07</span><h3>Use the Markdown text as the chat prompt</h3></div>
+    <div class="step-body">
+      <div class="note">
+        <p>This is a workaround for today's session. Typically, we would have the agents operate on our file directly in VS Code, but this method will be fine for today.</p>
+      </div>
+      <p>These Markdown files are designed to work either way and have the prompt information included at the top.</p>
+      <ul>
+        <li>Copy the text of the Markdown file you want to use to generate the Canvas page</li>
+        <li>Paste the entire text as a prompt into the chat</li>
+        <li>Press enter to generate the code</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step" id="copy-html">
+    <div class="step-head"><span class="step-id">08</span><h3>Copy the generated HTML</h3></div>
+    <div class="step-body">
+      <h4>Option 1: Copy from a code block</h4>
+      <p>Hopefully, the chat tool will generate a code block that looks like this.</p>
+      <figure>
+        <img src="assets/codeOutput.png" alt="Generated HTML shown in a chat code block with a clipboard button highlighted.">
+        <figcaption>Use the clipboard icon to copy the generated HTML source.</figcaption>
+      </figure>
+      <ul>
+        <li>Click the clipboard icon to copy the code</li>
+        <li>Create a new blank file in VS Code with File -> New Text File</li>
+        <li>Give it a name you can remember</li>
+        <li>Paste it into the blank file</li>
+      </ul>
+      <div class="note">
+        <p>It is important to keep local copies of your files for organization.</p>
+      </div>
+      <h4>Option 2: Download <code>canvas-fragment.html</code></h4>
+      <p>Some chat tools may generate a download link instead of a copyable code block.</p>
+      <ul>
+        <li>Download the <code>canvas-fragment.html</code> file</li>
+        <li>Copy it into the folder with the other example files</li>
+        <li>Select the file in VS Code to view the raw HTML code</li>
+        <li>Copy the raw HTML from that file</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step" id="canvas-html">
+    <div class="step-head"><span class="step-id">09</span><h3>Use the generated code in Canvas</h3></div>
+    <div class="step-body">
+      <p>Now you can use the generated HTML to create a page in Canvas.</p>
+      <ol>
+        <li>Go to <a href="https://canvascloud.ocadu.ca/courses/14047/pages">the workshop Canvas pages area</a></li>
+        <li>Create a new page by pressing <strong>+ Page</strong></li>
+        <li>Toggle to the HTML editor by pressing the <code>&lt;/&gt;</code> icon</li>
+      </ol>
+      <figure>
+        <img src="assets/01_ToggleToCode.png" alt="Canvas editor toolbar with the HTML editor button highlighted.">
+        <figcaption>Press the HTML editor button to switch from the visual editor to source mode.</figcaption>
+      </figure>
+      <p>When you toggle to the HTML editor, there will be numbered lines and a gray bar on the left.</p>
+      <figure>
+        <img src="assets/02_CodeEditor.png" alt="Canvas raw HTML editor showing an empty numbered code editor.">
+        <figcaption>The raw HTML editor shows numbered lines.</figcaption>
+      </figure>
+      <p>Copy your generated HTML and paste it into the box.</p>
+      <figure>
+        <img src="assets/03_PasteHtml.png" alt="Canvas HTML editor with generated HTML pasted into the code editor.">
+        <figcaption>Paste the generated HTML source into the Canvas HTML editor.</figcaption>
+      </figure>
+      <p>Toggle back to the rendered view by pressing the <code>&lt;/&gt;</code> icon again.</p>
+      <figure>
+        <img src="assets/04_ToggleBack.png" alt="Canvas visual editor showing the rendered class page after HTML has been pasted.">
+        <figcaption>Switch back to the rendered view to preview the styled page.</figcaption>
+      </figure>
+      <ul>
+        <li>You should now see the styled page</li>
+        <li>Save or publish it</li>
+        <li>You can also go back and edit the page directly as you typically would in the Canvas editor</li>
+      </ul>
+    </div>
+  </section>
+
+  <h2>Problems</h2>
+
+  <section class="step" id="worked">
+    <div class="step-head"><span class="step-id">10</span><h3>How do I know if it worked correctly?</h3></div>
+    <div class="step-body">
+      <p>In the example fileset, each section has a folder called <code>theAnswers</code> with pre-generated HTML. You can also view these pages from that section on this website.</p>
+    </div>
+  </section>
+
+  <section class="step" id="rendered">
+    <div class="step-head"><span class="step-id">11</span><h3>It gave me the rendered HTML, not the code</h3></div>
+    <div class="step-body">
+      <p>Tell the chat tool to fix it. Ask it to <strong>provide the output as downloadable HTML</strong>.</p>
+    </div>
+  </section>
+
+  <section class="step" id="wrong">
+    <div class="step-head"><span class="step-id">12</span><h3>Something else is wrong with the code or output</h3></div>
+    <div class="step-body">
+      <p>Try to explain what is wrong in the chat and ask it to fix the issue. Be specific about what you expected to see and what happened instead.</p>
+    </div>
+  </section>
+</main>
+</div>
+
+<footer style="border-top: 1px solid #e0e0e0; padding: 24px; text-align: center; font-size: 13px; color: #999;">
+  Canvas Design Agent -- Basic Workflow
+</footer>
+
+</body>
+</html>

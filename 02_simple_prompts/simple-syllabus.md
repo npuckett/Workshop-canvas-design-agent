@@ -1,4 +1,4 @@
-# Simple Syllabus Page
+# Simple Syllabus Editable Tags
 
 Use the Canvas Design Agent skill. Transform the syllabus content below into a clear Canvas syllabus page for students.
 
@@ -6,29 +6,64 @@ If you can create files or artifacts, create a downloadable `canvas-fragment.htm
 
 Do not show a rendered preview.
 
-Copy and paste this entire file into a chat tool with the skill.
+Copy and paste this entire file into a chat tool with the skill. The tag lines below are design instructions for the generated Canvas page. Use the tags to decide how each section should be displayed, but do not show the tag names or comment suggestions to students unless a tag is clearly meant to become a student-facing label.
 
-## Style
+Markdown comments in this file suggest other tags, colors, or elements to try. They are for workshop experimentation and should not appear in the final Canvas page.
 
-- Theme: S02 Bold Academic with the Traditional Serif font stack (F02)
-- Palette: Plum and Gold (primary #4a148c, accent #ffc107, link #7b1fa2)
-- Layout: readable single-column page using L05 Centered Container
-- Let the agent choose appropriate Canvas-safe elements for schedules, grading, and policies
+**NOTE** All text below was generated for the sake of this workshop. I don't use generated text in my actual courses.
+
+## Global Element Tags
+
+Style Tag: S02 Bold Academic
+<!-- Try also: S01 Clean Modern, S06 Editorial, S04 High Contrast, or S03 Warm Minimal. -->
+
+Font Tag: F02 Traditional Serif
+<!-- Try also: F01 System Sans-Serif for a cleaner page or F04 Wide Sans-Serif for accessibility priority. -->
+
+Palette Tag: Plum and Gold
+<!-- Primary #4a148c, accent #ffc107, link #7b1fa2. Try Forest Greens, Ocean Blues, or a department color set. -->
+
+Page Container Element: L05 Centered Container
+<!-- Try also: L04 CSS Grid for a contents/sidebar layout, L06 Full-Width Section with Background, or plain flow. -->
+
+Schedule Element: D05 Schedule Grid
+<!-- Try also: D01 Data Table, C01 Collapsible Section, C03 Info Cards, or C06 Ordered List Variants. -->
+
+Policies Element: C03 Info Card
+<!-- Try also: C01 Collapsible Section for longer policies, V01 Left-Border Accent Box, or C09 Basic Unordered List. -->
+
+## How To Experiment
+
+- Change one element ID at a time, then paste the whole file into a chat tool with the skill.
+- Try changing the global style before changing individual syllabus sections.
+- Use comments as a menu of ideas, not as required content.
+- Keep important policies visible; use collapsibles only for longer supplemental details.
+
+## Page Goals
+
+Section Handling Tag: generation-instructions
+<!-- These goals should guide the output. Do not render this section as student-facing syllabus content. -->
+
+- Create a readable single-page syllabus overview
+- Keep course information, schedule, projects, grading, and norms easy to scan
+- Use tables or structured lists where they make long information easier to read
+- Keep important policies visible
 
 ## Accessibility
 
-- Use one clear h1 and ordered section headings
+Section Handling Tag: generation-instructions
+<!-- Accessibility instructions should guide the generated HTML. Do not show this section as course content. -->
+
+- Use one clear h1 and logical heading order
 - Use readable color contrast
 - Use descriptive link text if links are added
 - Keep important policies visible; use collapsibles only for longer supplemental details
-
-## Output Expectations
-
-- Output a Canvas HTML fragment only
-- Use inline styles only
-- Do not include html, head, body, style, script, SVG, or markdown code fences
+- Use table headers with `scope="col"` if tables are generated
 
 ## Course Info
+
+Section Element: C04 Definition List
+<!-- Try also: L03 Flexbox Row, C03 Info Card, C05 Styled Definition List with Border Accent, or D03 Column-Styled Table. -->
 
 Course Code: CART 398
 Course Title: Designing AI Agents: They Are Fun! and They Might Eat Us
@@ -40,11 +75,17 @@ Instructor: Oh Cadyu
 
 ## About This Course
 
+Section Element: T06 Styled Blockquote
+<!-- Try also: V01 Left-Border Accent Box, C03 Info Card, or plain paragraphs. -->
+
 This is a studio seminar about making, reading, and testing. We will read early AI theory, look closely at contemporary tools and open-source projects, and use agent-based coding workflows to build experimental interactions for phones.
 
 No one is expected to arrive as an expert programmer or AI researcher. You are expected to document your process, ask sharper questions over time, test your work with other people, and stay alert to the difference between an impressive demo and a thoughtful interaction.
 
 ## Learning Goals
+
+Section Element: C07 Checklist
+<!-- Try also: C06 Ordered List Variants, C09 Basic Unordered List, C03 Info Card, or D01 Data Table. -->
 
 - Describe major ideas from early AI history and connect them to current design questions
 - Research contemporary AI tools and creative projects with attention to openness, shareability, and public documentation
@@ -54,6 +95,12 @@ No one is expected to arrive as an expert programmer or AI researcher. You are e
 - Present speculative, technical, and ethical design decisions in concise critique language
 
 ## Weekly Schedule
+
+Section Element: D05 Schedule Grid
+<!-- Try also: D01 Data Table, C01 Collapsible Section, C03 Info Cards, or C06 Ordered List Variants. -->
+
+Schedule Density Tag: compact
+<!-- Try also: roomy, very-compact, expanded, or unit-grouped. -->
 
 ### Week 1 -- Sep 8, 2026: What is an agent?
 
@@ -129,6 +176,9 @@ No one is expected to arrive as an expert programmer or AI researcher. You are e
 
 ## Projects and Grading
 
+Section Element: D07 Div-Based Progress Bar
+<!-- Try also: D01 Data Table, C03 Info Card, C06 Ordered List Variants, or V04 percentage badges. -->
+
 - Workshop 1: 10%
 - Workshop 2: 10%
 - Test Session 1: 15%
@@ -138,6 +188,9 @@ No one is expected to arrive as an expert programmer or AI researcher. You are e
 
 ## Important Dates
 
+Section Element: D05 Schedule Grid
+<!-- Try also: D01 Data Table, C03 Info Cards, V01 Left-Border Accent Boxes, or C06 Ordered List Variants. -->
+
 - Sep 15, 2026: Workshop 1 due -- AI History and Future drawing plus 200-word response
 - Sep 29, 2026: Workshop 2 due -- Contemporary tools research blog post with images
 - Oct 20, 2026: Test Session 1 -- First user test of main project prototype
@@ -146,6 +199,9 @@ No one is expected to arrive as an expert programmer or AI researcher. You are e
 - Nov 24, 2026: Final Presentation -- Final project presentation and process archive
 
 ## Workshop Norms
+
+Section Element: C03 Info Card
+<!-- Try also: C09 Basic Unordered List, C07 Checklist, V01 Left-Border Accent Box, or C01 Collapsible Section. -->
 
 - Document prompts, code changes, design decisions, and tests as part of the work, not as an afterthought
 - Treat AI-generated output as material to inspect, revise, and take responsibility for
